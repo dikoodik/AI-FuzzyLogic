@@ -18,9 +18,9 @@ hghIncome = Income(1.4, 2.0)
 
 lowDebt = Debt(0.0, 25.0)
 avgDebt = Debt(25.0, 75.0)
-hghDebt = Debt(25, 75.0)
+hghDebt = Debt(50, 75.0)
 
-def calcLowIncome(x):
+def calcLowIncome(x): #linear membership functon for low income
     if( x >= (lowIncome.max)):
         return float(0)
     elif(x <= (lowIncome.max + lowIncome.min)/2):
@@ -31,7 +31,7 @@ def calcLowIncome(x):
         return hasil
     return float(0)
 
-def calcAvgIncome(x):
+def calcAvgIncome(x): #linear membership functon for avg income
     if( x <= avgIncome.min):
         return float(0)
     elif(x <= (avgIncome.min+avgIncome.max)/2):
@@ -44,7 +44,7 @@ def calcAvgIncome(x):
         return float(0)
     return float(0)
 
-def calcHghIncome(x):
+def calcHghIncome(x): #linear membership functon for high income
     if(x <= hghIncome.min):
         return float(0)
     elif(x <= (hghIncome.min+hghIncome.max) / 2):
@@ -55,7 +55,7 @@ def calcHghIncome(x):
         return hasil
     return float(1)
 
-def calcLowDebt(y):
+def calcLowDebt(y): #linear membership functon for low debt
     if( y >= (lowDebt.max)):
         return float(0)
     elif(y <= (lowDebt.max + lowDebt.min)/2):
@@ -66,7 +66,7 @@ def calcLowDebt(y):
         return hasil
     return 0
 
-def calcAvgDebt(y):
+def calcAvgDebt(y): #linear membership functon for avg debt
     if( y <= avgDebt.min):
         return float(0)
     elif(y <= (avgDebt.min+avgDebt.max)/2):
@@ -81,7 +81,7 @@ def calcAvgDebt(y):
     return float(0)
 
 def calcHghDebt(y):
-    if(y <= hghDebt.min):
+    if(y <= hghDebt.min): #linear membership functon for high debt
         return float(0)
     elif(y <= (hghDebt.min+hghDebt.max) / 2):
         hasil = 2 * ((y-hghDebt.min) / (hghDebt.max-hghDebt.min))**2
@@ -128,12 +128,13 @@ for data in input_crisp:
             min(membership_result['hIncome'], membership_result['aDebt'])
         )
     }
-        #using takagi-sugeno style
+        #defuzzyfication using takagi-sugeno style
     scoreInference = inference['accepted'] + inference['considered'] + inference['rejected']
     scoreAccepted  = inference['accepted'] * (100 * (data['income'] - data['debt']))
     scoreConsidered= inference['considered'] * (70 * (data['income'] - data['debt']))
     scoreRejected  = inference['rejected'] * (50 * (data['income'] - data['debt']))
 
+    #mencari rata-rata untuk defuzzifikasi sugeno
     totalInference = (scoreAccepted + scoreConsidered + scoreRejected) / scoreInference
     print("No: ",data," totalInference: ",totalInference)
 
@@ -146,7 +147,6 @@ for data in input_crisp:
 inference_data.sort(key = lambda x: x['score'])
 output = map(lambda x: ["No: ",x['no']," | Pendapatan: ", x['income']," | Hutang: ",x['debt']," | Inference: ",x['score']], inference_data[:20])
 
-
-with open('TebakanTugas2.csv', mode='w', newline='') as csv_file:
+with open('TebakanTugas2.csv', mode='w', newline='') as csv_file: #crisp output
     csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL   )
     csv_writer.writerows(output)
